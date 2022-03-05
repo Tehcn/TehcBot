@@ -1,0 +1,29 @@
+{
+  "name": "tehcbot",
+  "version": "1.0.0",
+  "description": "minecraft bot for doing boring stuff",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "ts-node src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tehcn/TehcBot.git"
+  },
+  "keywords": [
+    "minecraft",
+    "bot"
+  ],
+  "author": "Noah Perry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Tehcn/TehcBot/issues"
+  },
+  "homepage": "https://github.com/Tehcn/TehcBot#readme",
+  "dependencies": {
+    "mineflayer": "^4.1.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.6.0"
+  }
+}
