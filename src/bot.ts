@@ -1,9 +1,9 @@
 import { createBot, Bot } from 'mineflayer';
 import { pathfinder, Movements, goals } from 'mineflayer-pathfinder';
-import { } from 'minecraft-data';
 import { filterPlayers } from './util';
 import { Action } from './action';
 import { Vec3 } from 'vec3';
+import { IndexedData } from 'minecraft-data';
 
 type ConnectionDetails = {
     host: string;
@@ -14,7 +14,9 @@ class TehcBot {
     public bot: Bot;
     public actions: Action[];
 
-    private mcData: any;
+    private mcData!: IndexedData;
+    private movements!: Movements;
+    private static RANGE_GOAL = 1;
 
     constructor(username: string, conn: ConnectionDetails, password?: string, tickEvent?: () => void) {
         this.actions = [];
@@ -25,21 +27,39 @@ class TehcBot {
             username: username
         });
 
+        this.bot.loadPlugin(pathfinder);
+
         this.bot.on('login', () => {
             console.log(`Logged in as ${username} to ${conn.host}:${conn.port}`);
         });
 
         this.bot.physicsEnabled = true 
         // default tick event handler
-        if(!tickEvent) {
-            this.bot.on('spawn', () => {
+        this.bot.on('spawn', () => {
+            this.mcData = require('minecraft-data')(this.bot.version);
+            this.movements = new Movements(this.bot, this.mcData);
+
+            // this.bot.on('chat', (username: string, message: string) => {
+            //     if(username === this.bot.username) return;
+            //     if(message.toLowerCase() !== ("start" || "go")) return;
+            //     const target = this.bot.players[username]?.entity;
+            //     if(!target) {
+            //         this.bot.chat(`Player ${username} out of range!`);
+            //         return
+            //     }
+
+            //     const { x: playerX, y: playerY, z: playerZ} = target.position;
+
+            //     this.bot.pathfinder.setMovements(this.movements);
+            //     this.bot.pathfinder.setGoal(new goals.GoalNear(playerX, playerY, playerZ, TehcBot.RANGE_GOAL));
+            // })
+
+            if(!tickEvent) {
                 this.bot.on('physicsTick', this.tick);
-            });
-        } else {
-            this.bot.on('spawn', () => {
+            } else {
                 this.bot.on('physicsTick', tickEvent);
-            });
-        }
+            }
+        });
     }
 
     public addAction(action: Action) {
@@ -63,20 +83,17 @@ class TehcBot {
         this.bot.lookAt(pos);
     }
 
-    public moveTo(pos: Vec3) {
-        this.lookAt(pos);
-        this.bot.setControlState('forward', true);
-        if(this.bot.entity.position.distanceTo(pos) > 4) {
-            this.bot.setControlState('sprint', true);
-        } else {
-
+    public moveToPlayer(username: string | undefined) {
+        if(!username) return;
+        this.lookAt(this.bot.players[username]?.entity.position);
+        const target = this.bot.players[username]?.entity;
+        if(!target) {
+            this.bot.chat(`Player ${username} out of range!`);
+            return
         }
-
-        if(pos.y - this.bot.entity.position.y > 1) {
-            this.bot.setControlState('jump', true);
-        } else {
-            this.bot.setControlState('jump', false);
-        }
+        const { x: playerX, y: playerY, z: playerZ} = target.position;
+        this.bot.pathfinder.setMovements(this.movements);
+        this.bot.pathfinder.setGoal(new goals.GoalNear(playerX, playerY, playerZ, TehcBot.RANGE_GOAL));
     }
 }
 

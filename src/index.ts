@@ -4,22 +4,23 @@ import { Action } from './action';
 
 const bots: TehcBot[] = [];
 
-for(let i=0;i<=Number.parseInt(process.argv[4]);i++) {
+for(let i=0;i<Number.parseInt(process.argv[4]);i++) {
     bots.push(new TehcBot(`TehcBot${i}`, { host: process.argv[2], port: Number.parseInt(process.argv[3]) }))
 }
 
 // runs every physics tick
 function tick(bot: TehcBot) {
-    if(bot.bot.health <= 0) return; // can't do anything if dead lmao
+
+    if(bot.bot.health <= 0) return // can't do anything if dead lmao (besides clearing all current actions)
 
     bot.addAction(new Action('moveToPlayer', () => {
         const player = bot.nearestPlayer();
         if(!player) return;
-        bot.moveTo(player.position.offset(0, player.height, 0));
+        bot.moveToPlayer(player.username);
     }));
 }
 
-// runs every second
+// runs 3/4 of a second
 function fixedTick() {
     bots.forEach(bot => {
         bot.addAction(new Action('attackPlayer', () => {
@@ -28,6 +29,7 @@ function fixedTick() {
             bot.lookAt(player.position.offset(0, player.height, 0));
             bot.bot.attack(player);
         }));
+
     });
 }
 
@@ -39,4 +41,10 @@ bots.forEach(bot => {
     });
 });
 
-setInterval(fixedTick, 1000);
+setInterval(() => {
+    bots.forEach(bot => {
+        bot.actions = []; // clear all actions to avoid memory leaks... which definetely have NOT happened
+    });
+}, 100);
+
+setInterval(fixedTick, 1000*(3/4));

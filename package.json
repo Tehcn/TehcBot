@@ -1,10 +1,10 @@
 {
   "name": "tehcbot",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Minecraft manhunt hunter bot",
   "main": "src/index.ts",
   "scripts": {
-    "test": "ts-node src/index.ts localhost 60734 4"
+    "test": "ts-node src/index.ts localhost 60734 1"
   },
   "repository": {
     "type": "git",
