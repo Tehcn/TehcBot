@@ -1,10 +1,10 @@
 {
   "name": "tehcbot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Minecraft manhunt hunter bot",
   "main": "src/index.ts",
   "scripts": {
-    "test": "ts-node src/index.ts localhost 60734"
+    "test": "ts-node src/index.ts localhost 60734 4"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/Tehcn/TehcBot#readme",
   "dependencies": {
-    "mineflayer": "^4.1.0"
+    "minecraft-data": "^2.114.1",
+    "mineflayer": "^4.1.0",
+    "mineflayer-pathfinder": "^1.9.1"
   },
   "devDependencies": {
     "ts-node": "^10.6.0"

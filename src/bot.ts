@@ -1,4 +1,6 @@
-import { createBot, Bot, BotEvents } from 'mineflayer';
+import { createBot, Bot } from 'mineflayer';
+import { pathfinder, Movements, goals } from 'mineflayer-pathfinder';
+import { } from 'minecraft-data';
 import { filterPlayers } from './util';
 import { Action } from './action';
 import { Vec3 } from 'vec3';
@@ -11,6 +13,8 @@ type ConnectionDetails = {
 class TehcBot {
     public bot: Bot;
     public actions: Action[];
+
+    private mcData: any;
 
     constructor(username: string, conn: ConnectionDetails, password?: string, tickEvent?: () => void) {
         this.actions = [];
@@ -67,7 +71,7 @@ class TehcBot {
         } else {
 
         }
-        
+
         if(pos.y - this.bot.entity.position.y > 1) {
             this.bot.setControlState('jump', true);
         } else {
