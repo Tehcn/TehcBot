@@ -1,10 +1,10 @@
 {
   "name": "tehcbot",
   "version": "1.0.0",
-  "description": "minecraft bot for doing boring stuff",
+  "description": "Minecraft manhunt hunter bot",
   "main": "src/index.ts",
   "scripts": {
-    "test": "ts-node src/index.ts"
+    "test": "ts-node src/index.ts localhost 60734"
   },
   "repository": {
     "type": "git",

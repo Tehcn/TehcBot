@@ -2,7 +2,7 @@ import { TehcBot } from './bot';
 import { Action } from './action';
 // import { Vec3 } from 'vec3';
 
-const bot = new TehcBot('TehcBot', { host: 'localhost', port: 60734 });
+const bot = new TehcBot('TehcBot', { host: process.argv[2], port: Number.parseInt(process.argv[3]) });
 
 // runs every physics tick
 function tick() {
